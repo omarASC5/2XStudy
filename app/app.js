@@ -17,8 +17,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/download', (req, res) => {
 	// These two lines of code download the YouTube Video based on the user-provided link
-
-	const pythonProcess = spawn('python', ["download-and-process-video.py", req.body.videoUrl]);
+	const pythonProcess = spawn('python3', [process.cwd() + "/app/download-and-process-video.py", req.body.videoUrl]);
 	let sent = false;
 
 	pythonProcess.stdout.on('data', data => {
@@ -27,7 +26,7 @@ app.post('/api/download', (req, res) => {
 			res.send(data.toString());
 	});
 	pythonProcess.stderr.on('data', data => {
-		console.log(data.toString())
+		console.log(data.toString());
 		lines = data.toString().split('\n');
 		res.send('ERROR ' + lines[lines.length - 2]);
 		sent = true;
