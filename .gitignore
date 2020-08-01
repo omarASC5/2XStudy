@@ -1,5 +1,5 @@
 .pyc
 app/node_modules
-public/saves
+app/public/saves
 TODO.txt
 __pycache__
