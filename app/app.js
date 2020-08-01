@@ -19,7 +19,7 @@ app.post('/api/download', (req, res) => {
 	console.log('post route hit', req.body.videoUrl);
 	// These two lines of code download the YouTube Video based on the user-provided link
 
-	const pythonProcess = spawn('python', ["download-and-process-video.py", req.body.videoUrl]);
+	const pythonProcess = spawn('python3', ["download-and-process-video.py", req.body.videoUrl]);
 	let sent = false;
 
 	pythonProcess.stdout.on('data', data => {

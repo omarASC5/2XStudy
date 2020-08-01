@@ -1,6 +1,7 @@
 from download_videos import download_video as download
-from process_audio import extract_audio as audio
-from process_video import process_video as video
+
+import extract_audio as audio
+from process_video_dir import process_video as video
 
 import sys, os
 import pytube
