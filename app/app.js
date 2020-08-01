@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 app.post('/api/download', (req, res) => {
 	// These two lines of code download the YouTube Video based on the user-provided link
 
-	const pythonProcess = spawn('python', ['./app/download-and-process-video.py', req.body.videoUrl]);
+	const pythonProcess = spawn('python', [process.cwd() + '/download-and-process-video.py', req.body.videoUrl]);
 	let sent = false;
 
 	pythonProcess.stdout.on('data', data => {
@@ -40,7 +40,7 @@ app.get('/error', (req, res) => {
 	res.sendFile('404.html', { root: __dirname + '/public'});
 });
 
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 8080;
 app.listen(port, () => {
 	console.log(`server running on port ${port}`);
 });
