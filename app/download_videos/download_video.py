@@ -1,23 +1,39 @@
 import pytube
+from pytube import YouTube
+from pytube.helpers import regex_search
+
 import os
 import datetime
 import json
 import sys
 
+def video_id(url: str) -> str:
+    """Extract the ``video_id`` from a YouTube url.
+
+    This function supports the following patterns:
+
+    - :samp:`https://youtube.com/watch?v={video_id}`
+    - :samp:`https://youtube.com/embed/{video_id}`
+    - :samp:`https://youtu.be/{video_id}`
+
+    :param str url:
+        A YouTube url containing a video id.
+    :rtype: str
+    :returns:
+        YouTube video id.
+    """
+    return regex_search(r"(?:v=|\/)([0-9A-Za-z_-]{11}).*", url, group=1)
 
 def get_video_id(video_url):
-    yt = pytube.YouTube(video_url)
-    video_data = yt.player_config_args.get('player_response').get('videoDetails')
-    video_id = video_data['videoId']
-
-    return video_id, yt
+    yt = YouTube(video_url)
+    return video_id(video_url), yt
 
 
 def download_video(video_url):
     video_id, yt = get_video_id(video_url)
 
     # Try finding captions to test if video is valid
-    caption = yt.captions.get_by_language_code("en") or yt.captions.all()[0]
+    caption = yt.captions['en'] or yt.captions.all()[0]
     caption_list = caption.generate_srt_captions().splitlines()
 
     if os.path.exists('./public/saves/' + video_id):
@@ -28,10 +44,10 @@ def download_video(video_url):
         .desc() \
         .first()
 
-    video_data = yt.player_config_args.get('player_response').get('videoDetails')
-    video_title = video_data['title']
-    video_author = video_data['author']
-    video_length_in_seconds = video_data['lengthSeconds']
+    # video_data = yt.player_config_args.get('player_response').get('videoDetails')
+    video_title = yt.title
+    video_author = yt.author
+    video_length_in_seconds = yt.length
     video_length_formatted = str(datetime.timedelta(seconds=int(video_length_in_seconds)))
 
     newpath = './public/saves/' + video_id

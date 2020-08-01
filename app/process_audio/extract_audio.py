@@ -37,7 +37,7 @@ def extract_audio(youtube, video_id):
     video = youtube
 
     # Get captions
-    caption = video.captions.get_by_language_code("en") or video.captions.all()[0]
+    caption = video.captions['en'] or video.captions.all()[0]
     caption_list = caption.generate_srt_captions().splitlines()
 
     # stream.download()

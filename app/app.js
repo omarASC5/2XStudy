@@ -3,15 +3,23 @@ const app = express();
 const spawn = require("child_process").spawn;
 const bodyParser = require('body-parser');
 
+// pip install -r requirements.txt
+// node app.js
+
+// Middleware
+app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/index.html');
+})
 
 app.post('/api/download', (req, res) => {
+	console.log('post route hit', req.body.videoUrl);
 	// These two lines of code download the YouTube Video based on the user-provided link
 
-	const pythonProcess = spawn('python3', ["./download-and-process-video.py", req.body.videoUrl]);
+	const pythonProcess = spawn('python', ["download-and-process-video.py", req.body.videoUrl]);
 	let sent = false;
 
 	pythonProcess.stdout.on('data', data => {
@@ -32,7 +40,7 @@ app.get('/error', (req, res) => {
 	res.sendFile('404.html', { root: __dirname + '/public'});
 });
 
-port = process.env.PORT || 8080;
-app.listen(8080, () => {
+let port = process.env.PORT || 3000;
+app.listen(port, () => {
 	console.log(`server running on port ${port}`);
 });
