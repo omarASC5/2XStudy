@@ -34,7 +34,7 @@ def download_video(video_url):
 
     # Try finding captions to test if video is valid
     if yt.captions:
-        caption = yt.captions.get_by_language_code("en") or yt.captions.all()[0]
+        caption = yt.captions["en"]
         caption_list = caption.generate_srt_captions().splitlines()
 
     if os.path.exists('./public/saves/' + video_id):

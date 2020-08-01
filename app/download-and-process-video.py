@@ -211,7 +211,7 @@ template = """
     transcriptions=transcriptions,
     speeds=json.dumps(breakpoints)
 )
-with open("./public/saves/" + video_id + "/index.html", "w") as f:
+with open("./public/saves/" + video_id + "/index.html", "w", encoding='utf-8') as f:
     f.write(template)
 
 print("DONE {} {}".format(video_id, json.dumps(metadata)))

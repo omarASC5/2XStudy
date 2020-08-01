@@ -23,8 +23,9 @@ app.post('/api/download', (req, res) => {
 
 	pythonProcess.stdout.on('data', data => {
 		data = data.toString();
-		if (data.startsWith('DONE') && !sent)
+		if (data.startsWith('DONE') && !sent) {
 			res.send(data.toString());
+		}
 	});
 	pythonProcess.stderr.on('data', data => {
 		console.log(data.toString());
