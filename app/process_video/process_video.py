@@ -2,7 +2,7 @@ from subprocess import Popen, PIPE
 import os
 
 FFMPEG_DIR = "ffmpeg"
-CUT_DIR_BASE = "./public/saves/{}/video_snippets/"
+CUT_DIR_BASE = "./saves/{}/video_snippets/"
 CUT_DIR = ""
 NO_LOG = ["-hide_banner", "-loglevel", "panic"]
 NO_LOG_STR = "-hide_banner -loglevel panic"

@@ -14,8 +14,8 @@ if sys.version_info < (3, 0):
 
 # Already exists no calculate
 video_id, yt = download.get_video_id(sys.argv[1])
-if os.path.exists("./public/saves/" + video_id):
-    with open("./public/saves/" + video_id + "/meta_data.json") as f:
+if os.path.exists("./saves/" + video_id):
+    with open("./saves/" + video_id + "/meta_data.json") as f:
         print("DONE {} {}".format(
             video_id,
             f.read()
@@ -32,8 +32,8 @@ if not re.match(r"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+", sys.ar
 try:
     _, _, metadata = download.download_video(sys.argv[1])
 except Exception as e:
-    if os.path.exists("./public/saves/" + video_id):
-        shutil.rmtree("./public/saves/" + video_id)
+    if os.path.exists("./saves/" + video_id):
+        shutil.rmtree("./saves/" + video_id)
     raise Exception(str(e))
 
 # Intermediate: make some directories
@@ -41,25 +41,25 @@ def make_if_not_exist(p):
     if not os.path.exists(p):
         os.makedirs(p)
 
-make_if_not_exist("./public/saves/" + video_id + "/video_snippets")
-make_if_not_exist("./public/saves/" + video_id + "/audio_snippets")
+make_if_not_exist("./saves/" + video_id + "/video_snippets")
+make_if_not_exist("./saves/" + video_id + "/audio_snippets")
 
 # 2. Extract breakpoints from video
 try:
     breakpoints = audio.extract_audio(yt, video_id)
 except:
-    if os.path.exists("./public/saves/" + video_id):
-        shutil.rmtree("./public/saves/" + video_id)
+    if os.path.exists("./saves/" + video_id):
+        shutil.rmtree("./saves/" + video_id)
     raise Exception("Video has no captions")
 
 # 3. Slice and format the video
-temp_vid = "./public/saves/" + video_id + "/temp.mp4"
+temp_vid = "./saves/" + video_id + "/temp.mp4"
 video.set_cut_dir(video_id)
 video.process_videos(temp_vid, breakpoints)
 
 # 4. Thumbnail
 video.run_process(video.FFMPEG_DIR, ["-ss", "00:00:05", "-i", temp_vid, "-vframes", "1", "-q:v", "2",
-    "./public/saves/" + video_id + "/thumb.jpg"])
+    "./saves/" + video_id + "/thumb.jpg"])
 # os.remove(temp_vid)
 
 # 5. Make the HMTL template
@@ -71,11 +71,11 @@ for i, b in enumerate(breakpoints):
     if text == "": continue
     transcriptions += """
 <audio id="audio-{id}" style="display: none">
-  <source src="/public/saves/{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
+  <source src="/saves/{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<video width="50%" src="/public/saves/{video_id}/video_snippets/{id2}.mp4" muted loop></video>
+<video width="50%" src="/saves/{video_id}/video_snippets/{id2}.mp4" muted loop></video>
 
 <table class="text-snippet" style="width: calc(100% + 160px); position: relative; left: -160px">
     <tr>
@@ -207,11 +207,11 @@ template = """
     title=metadata["video_title"],
     author=metadata["video_author"],
     time=metadata["video_length"],
-    src="/public/saves/" + video_id + "/temp.mp4",
+    src="/saves/" + video_id + "/temp.mp4",
     transcriptions=transcriptions,
     speeds=json.dumps(breakpoints)
 )
-with open("./public/saves/" + video_id + "/index.html", "w", encoding='utf-8') as f:
+with open("./saves/" + video_id + "/index.html", "w", encoding='utf-8') as f:
     f.write(template)
 
 print("DONE {} {}".format(video_id, json.dumps(metadata)))

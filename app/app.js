@@ -37,6 +37,10 @@ app.post('/api/download', (req, res) => {
 	pythonProcess.on('close', code => {});
 });
 
+app.get('/saves/:video_id', (req, res) => {
+	res.sendFile(__dirname + '/saves/' + req.params.video_id + '/index.html');
+});
+
 app.get('/error', (req, res) => {
 	res.sendFile('404.html', { root: __dirname + '/public'});
 });
