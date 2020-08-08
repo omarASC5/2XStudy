@@ -7,10 +7,11 @@ const bodyParser = require('body-parser');
 // node app.js
 
 // Middleware
-app.use(express.static('public'))
+app.use(express.static('./app/public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.get('/favicon.ico', (req, res) => res.status(204));
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
 })
@@ -39,6 +40,7 @@ app.post('/api/download', (req, res) => {
 app.get('/error', (req, res) => {
 	res.sendFile('404.html', { root: __dirname + '/public'});
 });
+
 
 let port = process.env.PORT || 8080;
 app.listen(port, () => {
