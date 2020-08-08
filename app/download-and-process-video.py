@@ -71,11 +71,11 @@ for i, b in enumerate(breakpoints):
     if text == "": continue
     transcriptions += """
 <audio id="audio-{id}" style="display: none">
-  <source src="/saves/{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
+  <source src="/public/saves/{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<video width="50%" src="/saves/{video_id}/video_snippets/{id2}.mp4" muted loop></video>
+<video width="50%" src="/public/saves/{video_id}/video_snippets/{id2}.mp4" muted loop></video>
 
 <table class="text-snippet" style="width: calc(100% + 160px); position: relative; left: -160px">
     <tr>
@@ -110,8 +110,8 @@ template = """
     <meta name="author" content="TheHumbleOnes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/page.css">
+    <link rel="stylesheet" href="/app/public/css/main.css">
+    <link rel="stylesheet" href="/app/public/css/page.css">
     <link href="https://fonts.googleapis.com/css?family=Jomolhari|Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
@@ -123,10 +123,10 @@ template = """
     </script>
 
     <div class="title-bar">
-        <a href="/index.html"><img src="/img/logo.png" class="logo"></a>
+        <a href="/app/public/index.html"><img src="/app/public/img/logo.png" class="logo"></a>
         <ul class="nav">
-            <li><a href="/index.html">Home</a></li>
-            <li><a href="/about.html">About</a></li>
+            <li><a href="/app/public/index.html">Home</a></li>
+            <li><a href="/app/public/about.html">About</a></li>
             <li><a href="https://github.com/Gavin-Song/2XStudy">Github</a></li>
         </ul>
     </div>
@@ -135,7 +135,7 @@ template = """
         <br><br><br><br>
 
         <!-- Absolutely placed -->
-        <button onclick="window.location.href = '/index.html';" class="invisible-button inline-big-button back-button"><i class="material-icons">
+        <button onclick="window.location.href = '/app/public/index.html';" class="invisible-button inline-big-button back-button"><i class="material-icons">
             arrow_back_ios
         </i></button>
 
@@ -198,16 +198,16 @@ template = """
         </div>
     </noscript>
 
-    <script src="/js/qrcode.js"></script>
-    <script src="/js/share.js"></script>
-    <script src="/js/video.js"></script>
+    <script src="/app/public/js/qrcode.js"></script>
+    <script src="/app/public/js/share.js"></script>
+    <script src="/app/public/js/video.js"></script>
 </body>
 
 </html>""".format(
     title=metadata["video_title"],
     author=metadata["video_author"],
     time=metadata["video_length"],
-    src="/saves/" + video_id + "/temp.mp4",
+    src="/public/saves/" + video_id + "/temp.mp4",
     transcriptions=transcriptions,
     speeds=json.dumps(breakpoints)
 )
