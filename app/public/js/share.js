@@ -1,4 +1,4 @@
-const qr = new QRCode(document.getElementById('qrcode'));
+// const qr = new QRCode(document.getElementById('qrcode'));
 
 function share() {
     let url = window.location;

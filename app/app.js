@@ -37,6 +37,11 @@ app.post('/api/download', (req, res) => {
 	pythonProcess.on('close', code => {});
 });
 
+app.get(':video_id/temp.mp4', (req, res) => {
+	console.log(__dirname + '/saves/' + req.params.video_id + '/temp.mp4')
+	res.sendFile(__dirname + '/saves/' + req.params.video_id + '/temp.mp4');
+});
+
 app.get('/saves/:video_id', (req, res) => {
 	res.sendFile(__dirname + '/saves/' + req.params.video_id + '/index.html');
 });

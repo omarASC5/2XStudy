@@ -14,8 +14,8 @@ if sys.version_info < (3, 0):
 
 # Already exists no calculate
 video_id, yt = download.get_video_id(sys.argv[1])
-if os.path.exists("./saves/" + video_id):
-    with open("./saves/" + video_id + "/meta_data.json") as f:
+if os.path.exists("./app/saves/" + video_id):
+    with open("./app/saves/" + video_id + "/meta_data.json") as f:
         print("DONE {} {}".format(
             video_id,
             f.read()
@@ -32,8 +32,8 @@ if not re.match(r"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+", sys.ar
 try:
     _, _, metadata = download.download_video(sys.argv[1])
 except Exception as e:
-    if os.path.exists("./saves/" + video_id):
-        shutil.rmtree("./saves/" + video_id)
+    if os.path.exists("./app/saves/" + video_id):
+        shutil.rmtree("./app/saves/" + video_id)
     raise Exception(str(e))
 
 # Intermediate: make some directories
@@ -41,25 +41,25 @@ def make_if_not_exist(p):
     if not os.path.exists(p):
         os.makedirs(p)
 
-make_if_not_exist("./saves/" + video_id + "/video_snippets")
-make_if_not_exist("./saves/" + video_id + "/audio_snippets")
+make_if_not_exist("./app/saves/" + video_id + "/video_snippets")
+make_if_not_exist("./app/saves/" + video_id + "/audio_snippets")
 
 # 2. Extract breakpoints from video
 try:
     breakpoints = audio.extract_audio(yt, video_id)
 except:
-    if os.path.exists("./saves/" + video_id):
-        shutil.rmtree("./saves/" + video_id)
+    if os.path.exists("./app/saves/" + video_id):
+        shutil.rmtree("./app/saves/" + video_id)
     raise Exception("Video has no captions")
 
 # 3. Slice and format the video
-temp_vid = "./saves/" + video_id + "/temp.mp4"
+temp_vid = "./app/saves/" + video_id + "/temp.mp4"
 video.set_cut_dir(video_id)
 video.process_videos(temp_vid, breakpoints)
 
 # 4. Thumbnail
 video.run_process(video.FFMPEG_DIR, ["-ss", "00:00:05", "-i", temp_vid, "-vframes", "1", "-q:v", "2",
-    "./saves/" + video_id + "/thumb.jpg"])
+    "./app/saves/" + video_id + "/thumb.jpg"])
 # os.remove(temp_vid)
 
 # 5. Make the HMTL template
@@ -71,11 +71,11 @@ for i, b in enumerate(breakpoints):
     if text == "": continue
     transcriptions += """
 <audio id="audio-{id}" style="display: none">
-  <source src="/saves/{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
+  <source src="../{video_id}/audio_snippets/{id}.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<video width="50%" src="/saves/{video_id}/video_snippets/{id2}.mp4" muted loop></video>
+<video width="50%" src="../{video_id}/video_snippets/{id2}.mp4" muted loop></video>
 
 <table class="text-snippet" style="width: calc(100% + 160px); position: relative; left: -160px">
     <tr>
@@ -110,8 +110,8 @@ template = """
     <meta name="author" content="TheHumbleOnes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/app/public/css/main.css">
-    <link rel="stylesheet" href="/app/public/css/page.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/page.css">
     <link href="https://fonts.googleapis.com/css?family=Jomolhari|Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
@@ -123,10 +123,10 @@ template = """
     </script>
 
     <div class="title-bar">
-        <a href="/app/public/index.html"><img src="/app/public/img/logo.png" class="logo"></a>
+        <a href="../../index.html"><img src="../../img/logo.png" class="logo"></a>
         <ul class="nav">
-            <li><a href="/app/public/index.html">Home</a></li>
-            <li><a href="/app/public/about.html">About</a></li>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../about.html">About</a></li>
             <li><a href="https://github.com/Gavin-Song/2XStudy">Github</a></li>
         </ul>
     </div>
@@ -135,7 +135,7 @@ template = """
         <br><br><br><br>
 
         <!-- Absolutely placed -->
-        <button onclick="window.location.href = '/app/public/index.html';" class="invisible-button inline-big-button back-button"><i class="material-icons">
+        <button onclick="window.location.href = '/../../index.html';" class="invisible-button inline-big-button back-button"><i class="material-icons">
             arrow_back_ios
         </i></button>
 
@@ -198,20 +198,20 @@ template = """
         </div>
     </noscript>
 
-    <script src="/app/public/js/qrcode.js"></script>
-    <script src="/app/public/js/share.js"></script>
-    <script src="/app/public/js/video.js"></script>
+    <script src="../../js/qrcode.js"></script>
+    <script src="../../js/share.js"></script>
+    <script src="../../js/video.js"></script>
 </body>
 
 </html>""".format(
     title=metadata["video_title"],
     author=metadata["video_author"],
     time=metadata["video_length"],
-    src="/saves/" + video_id + "/temp.mp4",
+    src="../" + video_id + "/temp.mp4",
     transcriptions=transcriptions,
     speeds=json.dumps(breakpoints)
 )
-with open("./saves/" + video_id + "/index.html", "w", encoding='utf-8') as f:
+with open("./app/saves/" + video_id + "/index.html", "w", encoding='utf-8') as f:
     f.write(template)
 
 print("DONE {} {}".format(video_id, json.dumps(metadata)))

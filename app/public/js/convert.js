@@ -64,8 +64,8 @@ function loadStudySets() {
         let newhtml = '';
         for (let key of keys) {
             let i = window.localStorage.getItem(key);
-            newhtml += `<li onclick="window.location.href='/saves/${key}/index.html'">
-            <img src="/saves/${key}/thumb.jpg"
+            newhtml += `<li onclick="window.location.href='/saves/${key}'">
+            <img src="saves/${key}/thumb.jpg"
                 onerror="this.src='/img/loading.gif'">
             <p>
             ${i.video_title}
