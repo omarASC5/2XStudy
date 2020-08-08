@@ -63,7 +63,7 @@ function loadStudySets() {
     if (keys.length > 0) {
         let newhtml = '';
         for (let key of keys) {
-            let i = window.localStorage.getItem(key);
+            let i = JSON.parse(window.localStorage.getItem(key));
             newhtml += `<li onclick="window.location.href='/saves/${key}'">
             <img src="saves/${key}/thumb.jpg"
                 onerror="this.src='/img/loading.gif'">

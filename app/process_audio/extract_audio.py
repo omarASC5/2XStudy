@@ -6,7 +6,7 @@ import json
 import os
 import subprocess
 
-SAVE_DIR_FORMAT = "./app/saves/{}/"
+SAVE_DIR_FORMAT = "./app/public/saves/{}/"
 PADDING = 1
 
 """

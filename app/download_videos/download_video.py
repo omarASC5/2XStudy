@@ -37,7 +37,7 @@ def download_video(video_url):
         caption = yt.captions["en"]
         caption_list = caption.generate_srt_captions().splitlines()
 
-    if os.path.exists('./app/saves/' + video_id):
+    if os.path.exists('./app/public/saves/' + video_id):
         return yt, video_id, {}
 
     video = yt.streams.filter(progressive=True) \
@@ -51,17 +51,17 @@ def download_video(video_url):
     video_length_in_seconds = yt.length
     video_length_formatted = str(datetime.timedelta(seconds=int(video_length_in_seconds)))
 
-    newpath = './app/saves/' + video_id
+    newpath = './app/public/saves/' + video_id
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-    video.download('./app/saves/' + video_id, 'temp')
+    video.download('./app/public/saves/' + video_id, 'temp')
 
     meta_data = {'video_id': video_id, 'video_title': video_title, \
                 'video_author': video_author, 'video_length': video_length_formatted}
 
     output_file = 'meta_data.json'
-    with open('./app/saves/' + video_id + '/' + output_file, 'w') as f:
+    with open('./app/public/saves/' + video_id + '/' + output_file, 'w') as f:
         json.dump(meta_data, f)
     return yt, video_id, meta_data
 
